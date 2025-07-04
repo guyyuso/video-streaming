@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamHub - Premium Video Streaming</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="#" class="logo">
+            <i class="fas fa-play-circle"></i>
+            StreamHub
+        </a>
+        <nav>
+            <ul>
+                <li><a href="#" class="active" data-section="home">Home</a></li>
+                <li><a href="#" data-section="movies">Movies</a></li>
+                <li><a href="#" data-section="tvshows">TV Shows</a></li>
+                <li><a href="#" data-section="upload">Upload</a></li>
+                <li><a href="#" data-section="mylist">My List</a></li>
+            </ul>
+        </nav>
+        <div class="user-actions">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search..." id="searchInput">
+            </div>
+            <div class="user-profile">
+                <div class="avatar">U</div>
+                <i class="fas fa-caret-down"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your Personal Video Streaming Platform</h1>
+            <p>Upload, compress, and stream your videos with professional quality. Experience seamless video management.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" id="uploadBtn">
+                    <i class="fas fa-upload"></i> Upload Video
+                </button>
+                <button class="btn btn-secondary" id="browseBtn">
+                    <i class="fas fa-film"></i> Browse Videos
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section class="section upload-section" id="uploadSection" style="display: none;">
+        <div class="upload-container">
+            <h2>Upload New Video</h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drag & drop your video here or click to browse</p>
+                    <input type="file" id="videoFile" accept="video/*" hidden>
+                </div>
+                <div class="form-group">
+                    <label for="videoTitle">Title</label>
+                    <input type="text" id="videoTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="videoCategory">Category</label>
+                    <select id="videoCategory" name="category">
+                        <option value="Action">Action</option>
+                        <option value="Comedy">Comedy</option>
+                        <option value="Drama">Drama</option>
+                        <option value="Sci-Fi">Sci-Fi</option>
+                        <option value="Thriller">Thriller</option>
+                        <option value="Documentary">Documentary</option>
+                        <option value="Animation">Animation</option>
+                        <option value="General">General</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="videoDescription">Description</label>
+                    <textarea id="videoDescription" name="description" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-upload"></i> Upload & Compress
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Featured Content -->
+    <section class="section featured" id="featuredSection">
+        <div class="section-title">
+            <h2>Your Videos</h2>
+            <a href="#" class="view-all" id="refreshVideos">Refresh</a>
+        </div>
+        <div class="video-grid" id="videoGrid">
+            <!-- Videos will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Loading Indicator -->
+    <div class="loading" id="loadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+        <p>Processing video...</p>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div class="player-modal" id="playerModal">
+        <div class="player-container">
+            <div class="video-player">
+                <video controls id="videoPlayer">
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="video-details">
+                <h3 id="playerTitle"></h3>
+                <p id="playerDescription"></p>
+                <div class="player-actions">
+                    <button class="btn btn-secondary" id="addToListBtn">
+                        <i class="fas fa-plus"></i> Add to List
+                    </button>
+                    <button class="btn btn-danger" id="deleteVideoBtn">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+            <div class="close-player" id="closePlayer">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>StreamHub</h3>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Cookies</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Account</h3>
+                <ul>
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="#">My Videos</a></li>
+                    <li><a href="#">Upload History</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Connect</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 StreamHub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
