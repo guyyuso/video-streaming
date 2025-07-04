@@ -3,179 +3,383 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamHub - Premium Video Streaming</title>
+    <title>StreamHub - Personal Media Streaming Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Header -->
-    <header>
+    <header id="header">
         <a href="#" class="logo">
             <i class="fas fa-play-circle"></i>
             StreamHub
         </a>
         <nav>
             <ul>
-                <li><a href="#" class="active" data-section="home">Home</a></li>
-                <li><a href="#" data-section="movies">Movies</a></li>
-                <li><a href="#" data-section="tvshows">TV Shows</a></li>
-                <li><a href="#" data-section="upload">Upload</a></li>
-                <li><a href="#" data-section="mylist">My List</a></li>
+                <li><a href="#" class="nav-link active" data-section="home">Home</a></li>
+                <li><a href="#" class="nav-link" data-section="library">Library</a></li>
+                <li><a href="#" class="nav-link" data-section="upload">Upload</a></li>
+                <li><a href="#" class="nav-link" data-section="analytics">Analytics</a></li>
+                <li><a href="#" class="nav-link" data-section="settings">Settings</a></li>
             </ul>
         </nav>
         <div class="user-actions">
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search..." id="searchInput">
+                <input type="text" placeholder="Search media..." id="searchInput">
             </div>
-            <div class="user-profile">
-                <div class="avatar">U</div>
-                <i class="fas fa-caret-down"></i>
+            <div class="user-profile" id="userProfile">
+                <div class="avatar" id="userAvatar">?</div>
+                <div class="dropdown-menu" id="userDropdown">
+                    <a href="#" id="profileLink"><i class="fas fa-user"></i> Profile</a>
+                    <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Your Personal Video Streaming Platform</h1>
-            <p>Upload, compress, and stream your videos with professional quality. Experience seamless video management.</p>
-            <div class="hero-buttons">
-                <button class="btn btn-primary" id="uploadBtn">
-                    <i class="fas fa-upload"></i> Upload Video
-                </button>
-                <button class="btn btn-secondary" id="browseBtn">
-                    <i class="fas fa-film"></i> Browse Videos
-                </button>
+    <!-- Authentication Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="authTitle">Welcome to StreamHub</h2>
+                <span class="close" id="closeAuth">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="authForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group" id="emailGroup" style="display: none;">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="authSubmit">Login</button>
+                </form>
+                <div class="auth-toggle">
+                    <p>Don't have an account? <a href="#" id="toggleAuth">Register</a></p>
+                </div>
             </div>
         </div>
-    </section>
-
-    <!-- Upload Section -->
-    <section class="section upload-section" id="uploadSection" style="display: none;">
-        <div class="upload-container">
-            <h2>Upload New Video</h2>
-            <form id="uploadForm" enctype="multipart/form-data">
-                <div class="upload-area" id="uploadArea">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p>Drag & drop your video here or click to browse</p>
-                    <input type="file" id="videoFile" accept="video/*" hidden>
-                </div>
-                <div class="form-group">
-                    <label for="videoTitle">Title</label>
-                    <input type="text" id="videoTitle" name="title" required>
-                </div>
-                <div class="form-group">
-                    <label for="videoCategory">Category</label>
-                    <select id="videoCategory" name="category">
-                        <option value="Action">Action</option>
-                        <option value="Comedy">Comedy</option>
-                        <option value="Drama">Drama</option>
-                        <option value="Sci-Fi">Sci-Fi</option>
-                        <option value="Thriller">Thriller</option>
-                        <option value="Documentary">Documentary</option>
-                        <option value="Animation">Animation</option>
-                        <option value="General">General</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="videoDescription">Description</label>
-                    <textarea id="videoDescription" name="description" rows="4"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-upload"></i> Upload & Compress
-                </button>
-            </form>
-        </div>
-    </section>
-
-    <!-- Featured Content -->
-    <section class="section featured" id="featuredSection">
-        <div class="section-title">
-            <h2>Your Videos</h2>
-            <a href="#" class="view-all" id="refreshVideos">Refresh</a>
-        </div>
-        <div class="video-grid" id="videoGrid">
-            <!-- Videos will be loaded here -->
-        </div>
-    </section>
-
-    <!-- Loading Indicator -->
-    <div class="loading" id="loadingIndicator" style="display: none;">
-        <div class="spinner"></div>
-        <p>Processing video...</p>
     </div>
 
-    <!-- Video Player Modal -->
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="homeSection" class="section active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Your Personal Media Streaming Platform</h1>
+                    <p>Upload, manage, and stream your media collection with professional-grade features.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" id="heroUploadBtn">
+                            <i class="fas fa-upload"></i> Upload Media
+                        </button>
+                        <button class="btn btn-secondary" id="heroBrowseBtn">
+                            <i class="fas fa-film"></i> Browse Library
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <!-- Recent Uploads -->
+                <div class="section-header">
+                    <h2>Recent Uploads</h2>
+                    <a href="#" class="view-all" id="viewAllRecent">View All</a>
+                </div>
+                <div class="media-grid" id="recentMedia">
+                    <!-- Recent media items will be loaded here -->
+                </div>
+
+                <!-- Popular Content -->
+                <div class="section-header">
+                    <h2>Popular Content</h2>
+                    <a href="#" class="view-all" id="viewAllPopular">View All</a>
+                </div>
+                <div class="media-grid" id="popularMedia">
+                    <!-- Popular media items will be loaded here -->
+                </div>
+
+                <!-- Continue Watching -->
+                <div class="section-header" id="continueWatchingHeader" style="display: none;">
+                    <h2>Continue Watching</h2>
+                    <a href="#" class="view-all" id="viewAllContinue">View All</a>
+                </div>
+                <div class="media-grid" id="continueWatching">
+                    <!-- Continue watching items will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Library Section -->
+        <section id="librarySection" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Media Library</h2>
+                    <div class="library-controls">
+                        <select id="categoryFilter" class="filter-select">
+                            <option value="">All Categories</option>
+                            <option value="Action">Action</option>
+                            <option value="Comedy">Comedy</option>
+                            <option value="Drama">Drama</option>
+                            <option value="Sci-Fi">Sci-Fi</option>
+                            <option value="Documentary">Documentary</option>
+                            <option value="Animation">Animation</option>
+                            <option value="General">General</option>
+                        </select>
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid"><i class="fas fa-th"></i></button>
+                            <button class="view-btn" data-view="list"><i class="fas fa-list"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="media-grid" id="libraryGrid">
+                    <!-- Library items will be loaded here -->
+                </div>
+                <div class="loading-indicator" id="libraryLoading">
+                    <div class="spinner"></div>
+                    <p>Loading library...</p>
+                </div>
+                <div class="empty-state" id="libraryEmpty" style="display: none;">
+                    <i class="fas fa-film"></i>
+                    <h3>No media found</h3>
+                    <p>Upload your first video to get started!</p>
+                    <button class="btn btn-primary" id="emptyUploadBtn">
+                        <i class="fas fa-upload"></i> Upload Media
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upload Section -->
+        <section id="uploadSection" class="section">
+            <div class="container">
+                <div class="upload-container">
+                    <h2>Upload New Media</h2>
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <h3>Drag & drop your media here</h3>
+                            <p>or click to browse files</p>
+                            <input type="file" id="mediaFile" accept="video/*,audio/*" hidden>
+                            <div class="supported-formats">
+                                <small>Supported formats: MP4, AVI, MKV, MOV, WMV, FLV, WebM</small>
+                            </div>
+                        </div>
+                        
+                        <div class="upload-details" id="uploadDetails" style="display: none;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="mediaTitle">Title *</label>
+                                    <input type="text" id="mediaTitle" name="title" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="mediaCategory">Category</label>
+                                    <select id="mediaCategory" name="category">
+                                        <option value="General">General</option>
+                                        <option value="Action">Action</option>
+                                        <option value="Comedy">Comedy</option>
+                                        <option value="Drama">Drama</option>
+                                        <option value="Sci-Fi">Sci-Fi</option>
+                                        <option value="Thriller">Thriller</option>
+                                        <option value="Documentary">Documentary</option>
+                                        <option value="Animation">Animation</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="mediaDescription">Description</label>
+                                <textarea id="mediaDescription" name="description" rows="3" 
+                                         placeholder="Enter a description for your media..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="mediaTags">Tags (comma-separated)</label>
+                                <input type="text" id="mediaTags" name="tags" 
+                                       placeholder="action, adventure, 2023">
+                            </div>
+                            
+                            <div class="upload-actions">
+                                <button type="button" class="btn btn-secondary" id="cancelUpload">Cancel</button>
+                                <button type="submit" class="btn btn-primary" id="startUpload">
+                                    <i class="fas fa-upload"></i> Upload & Process
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="upload-progress" id="uploadProgress" style="display: none;">
+                        <div class="progress-header">
+                            <h3>Processing Media</h3>
+                            <span class="progress-percent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <div class="progress-status">Preparing upload...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analyticsSection" class="section">
+            <div class="container">
+                <h2>Analytics Dashboard</h2>
+                <div class="analytics-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-film"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalMediaCount">0</h3>
+                            <p>Total Media Files</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalPlaysCount">0</h3>
+                            <p>Total Plays</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-hdd"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="storageUsed">0 MB</h3>
+                            <p>Storage Used</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="watchTime">0h 0m</h3>
+                            <p>Total Watch Time</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-charts">
+                    <div class="chart-container">
+                        <h3>Popular Media</h3>
+                        <div class="popular-list" id="popularList">
+                            <!-- Popular media list will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settingsSection" class="section">
+            <div class="container">
+                <h2>Settings</h2>
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>Account Settings</h3>
+                        <div class="form-group">
+                            <label for="settingsUsername">Username</label>
+                            <input type="text" id="settingsUsername" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="settingsEmail">Email</label>
+                            <input type="email" id="settingsEmail" readonly>
+                        </div>
+                        <button class="btn btn-secondary">Change Password</button>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <h3>Playback Settings</h3>
+                        <div class="form-group">
+                            <label for="defaultQuality">Default Quality</label>
+                            <select id="defaultQuality">
+                                <option value="auto">Auto</option>
+                                <option value="1080p">1080p</option>
+                                <option value="720p">720p</option>
+                                <option value="480p">480p</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="autoplay"> Autoplay next video
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <h3>Storage Settings</h3>
+                        <div class="storage-info">
+                            <p>Used: <span id="storageUsedPercent">0%</span></p>
+                            <div class="storage-bar">
+                                <div class="storage-fill"></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-danger" id="cleanupStorage">Cleanup Storage</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Media Player Modal -->
     <div class="player-modal" id="playerModal">
         <div class="player-container">
+            <div class="player-header">
+                <h3 id="playerTitle">Media Title</h3>
+                <button class="close-player" id="closePlayer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
             <div class="video-player">
-                <video controls id="videoPlayer">
+                <video controls id="videoPlayer" preload="metadata">
                     <source src="" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
-            <div class="video-details">
-                <h3 id="playerTitle"></h3>
-                <p id="playerDescription"></p>
+            
+            <div class="player-controls">
+                <div class="player-info">
+                    <p id="playerDescription">Media description will appear here.</p>
+                    <div class="player-meta">
+                        <span id="playerCategory">Category</span>
+                        <span id="playerDuration">Duration</span>
+                        <span id="playerUploadDate">Upload Date</span>
+                    </div>
+                </div>
+                
                 <div class="player-actions">
-                    <button class="btn btn-secondary" id="addToListBtn">
-                        <i class="fas fa-plus"></i> Add to List
+                    <button class="btn btn-secondary" id="addToPlaylistBtn">
+                        <i class="fas fa-plus"></i> Add to Playlist
                     </button>
-                    <button class="btn btn-danger" id="deleteVideoBtn">
+                    <button class="btn btn-danger" id="deleteMediaBtn">
                         <i class="fas fa-trash"></i> Delete
                     </button>
                 </div>
             </div>
-            <div class="close-player" id="closePlayer">
-                <i class="fas fa-times"></i>
-            </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>StreamHub</h3>
-                <ul>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">Help</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Legal</h3>
-                <ul>
-                    <li><a href="#">Terms of Use</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Cookies</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Account</h3>
-                <ul>
-                    <li><a href="#">Settings</a></li>
-                    <li><a href="#">My Videos</a></li>
-                    <li><a href="#">Upload History</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Connect</h3>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 StreamHub. All rights reserved.</p>
-        </div>
-    </footer>
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
 
+    <!-- Scripts -->
     <script src="script.js"></script>
 </body>
 </html>

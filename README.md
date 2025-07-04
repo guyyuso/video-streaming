@@ -1,50 +1,93 @@
-# StreamHub - Video Streaming Platform
+# StreamHub - Personal Media Streaming Platform
 
-A professional video streaming platform with upload, compression, and management features. Built with Node.js, Express, and FFmpeg for optimal video processing.
+A comprehensive personal media streaming platform built with a layered architecture following enterprise-grade design patterns. This platform provides professional-grade video management, transcoding, and streaming capabilities.
 
-## Features
+## 🏗️ Architecture Overview
 
-### 🎬 Video Management
-- **Upload Videos**: Drag & drop or click to upload video files
-- **Automatic Compression**: Videos are compressed using FFmpeg for optimal streaming
-- **Thumbnail Generation**: Automatic thumbnail creation from video frames
-- **Video Metadata**: Title, category, description, and duration tracking
-- **View Counter**: Track video views automatically
+```
+[Client Applications] 
+        ↓
+   [API Gateway]
+        ↓
+[Media Management] — [Transcoding & Streaming]  
+        |                     |
+        ↓                     ↓
+[Media Storage]      [User & Config Database]
+        ↓                     ↓
+     [Network Infrastructure & Security]
+        ↓
+ [Monitoring & Analytics]
+```
 
-### 🎯 User Interface
-- **Netflix-style Design**: Modern, responsive interface
-- **Video Grid**: Clean card-based video display
-- **Search Functionality**: Real-time video search
-- **Categories**: Organize videos by genre (Action, Comedy, Drama, etc.)
-- **My List**: Personal video collection management
+## 🎯 Core Features
 
-### 🎪 Streaming Features
-- **HTML5 Video Player**: Built-in video player with controls
-- **Responsive Design**: Works on desktop, tablet, and mobile
-- **Modal Player**: Full-screen video viewing experience
-- **Progress Tracking**: Resume watching from where you left off
+### 📱 Client Application Layer
+- **Web Interface**: Responsive Netflix-style web application
+- **Real-time Updates**: WebSocket integration for live notifications
+- **Progressive Web App**: Offline-capable with service worker support
+- **Mobile Responsive**: Optimized for all device sizes
 
-### 🔧 Technical Features
-- **FFmpeg Integration**: Professional video compression and processing
-- **RESTful API**: Clean API endpoints for video management
-- **File Management**: Automatic cleanup of original files after compression
-- **Error Handling**: Comprehensive error handling and user feedback
+### 🔐 API Gateway & Security
+- **JWT Authentication**: Secure token-based authentication
+- **Rate Limiting**: Configurable request throttling
+- **CORS Protection**: Cross-origin request security
+- **Input Validation**: Comprehensive data validation
+- **Security Headers**: Helmet.js security middleware
 
-## Installation
+### 🎬 Media Management Service
+- **Smart Upload**: Drag & drop with progress tracking
+- **Automatic Metadata**: Title, duration, resolution extraction
+- **Category Organization**: Flexible categorization system
+- **Search & Filter**: Real-time search with multiple filters
+- **Batch Operations**: Multiple file management
+
+### 🔄 Transcoding & Streaming Service
+- **FFmpeg Integration**: Professional video processing
+- **Adaptive Quality**: Multiple resolution support
+- **Format Standardization**: Convert to web-optimized MP4
+- **Thumbnail Generation**: Automatic preview thumbnails
+- **Progress Tracking**: Real-time transcoding updates
+
+### 💾 Storage Layer
+- **Local Storage**: Efficient file system management
+- **Organized Structure**: Separate media and thumbnail directories
+- **Compression**: Size optimization while maintaining quality
+- **Cleanup**: Automatic temporary file removal
+
+### 🗄️ Database Layer
+- **SQLite Integration**: Lightweight, reliable database
+- **User Management**: Authentication and preferences
+- **Media Metadata**: Comprehensive file information
+- **Watch History**: Progress tracking and resume functionality
+- **Analytics Data**: Usage statistics and insights
+
+### 📊 Analytics & Monitoring
+- **Usage Analytics**: Play counts, view statistics
+- **User Engagement**: Watch time, favorite categories
+- **System Health**: Storage usage, performance metrics
+- **Popular Content**: Trending media identification
+
+## 🚀 Installation & Setup
 
 ### Prerequisites
-- Node.js (v14 or higher)
-- FFmpeg installed on your system
+```bash
+# Node.js v16+ required
+node --version
+
+# FFmpeg installation required
+ffmpeg -version
+```
 
 ### FFmpeg Installation
 
 #### Windows
-1. Download FFmpeg from [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
-2. Extract to a folder (e.g., `C:\ffmpeg`)
-3. Add `C:\ffmpeg\bin` to your PATH environment variable
+1. Download from [FFmpeg Official Site](https://ffmpeg.org/download.html#build-windows)
+2. Extract to `C:\ffmpeg`
+3. Add `C:\ffmpeg\bin` to system PATH
 
 #### macOS
 ```bash
+# Using Homebrew
 brew install ffmpeg
 ```
 
@@ -56,162 +99,314 @@ sudo apt install ffmpeg
 
 ### Project Setup
 
-1. **Clone the repository**
+1. **Clone & Install**
    ```bash
    git clone <repository-url>
-   cd streamhub-video-platform
-   ```
-
-2. **Install dependencies**
-   ```bash
+   cd streamhub-media-platform
    npm install
    ```
 
-3. **Create required directories**
+2. **Environment Configuration**
    ```bash
-   mkdir videos thumbnails uploads
+   cp .env.example .env
+   # Edit .env with your configuration
    ```
 
-4. **Start the server**
+3. **Database Initialization**
    ```bash
+   npm run init-db
+   ```
+
+4. **Start Application**
+   ```bash
+   # Development mode
+   npm run dev
+   
+   # Production mode
    npm start
    ```
 
-   For development with auto-reload:
-   ```bash
-   npm run dev
+5. **Access Application**
+   ```
+   Open: http://localhost:3000
+   Default Admin: admin / admin123
    ```
 
-5. **Open your browser**
-   Navigate to `http://localhost:3000`
+## 📋 Configuration
 
-## Usage
+### Environment Variables
 
-### Uploading Videos
-1. Click "Upload Video" button or navigate to Upload section
-2. Drag & drop a video file or click to browse
-3. Fill in video details (title, category, description)
-4. Click "Upload & Compress"
-5. Wait for processing to complete
+```env
+# Server Configuration
+PORT=3000
+NODE_ENV=development
 
-### Viewing Videos
-1. Browse videos in the main grid
-2. Click any video card to start playback
-3. Use the built-in player controls
-4. Add videos to your personal list
+# Database
+DB_PATH=./database/media.db
 
-### Managing Videos
-1. Search for videos using the search bar
-2. Filter by categories in the navigation
-3. Delete videos from the player modal
-4. View upload history and statistics
+# Security
+JWT_SECRET=your-super-secret-key
+JWT_EXPIRES_IN=7d
 
-## API Endpoints
+# Media Processing
+MAX_FILE_SIZE=2147483648  # 2GB
+DEFAULT_VIDEO_BITRATE=2000k
+DEFAULT_AUDIO_BITRATE=192k
+DEFAULT_RESOLUTION=1920x1080
 
-### Video Management
-- `GET /api/videos` - Get all videos
-- `GET /api/videos/:id` - Get specific video
-- `POST /upload` - Upload new video
-- `DELETE /api/videos/:id` - Delete video
-- `GET /api/search?q=query` - Search videos
+# Storage Paths
+MEDIA_STORAGE_PATH=./storage/media
+THUMBNAIL_STORAGE_PATH=./storage/thumbnails
+TEMP_STORAGE_PATH=./storage/temp
 
-### File Serving
-- `GET /videos/:filename` - Stream video files
-- `GET /thumbnails/:filename` - Serve thumbnail images
+# Security
+RATE_LIMIT_WINDOW=15
+RATE_LIMIT_MAX_REQUESTS=100
 
-## Configuration
-
-### Video Compression Settings
-Default compression settings in `server.js`:
-- Resolution: 1280x720 (720p)
-- Video Bitrate: 1000k
-- Audio Bitrate: 128k
-- Codec: H.264 (libx264) + AAC
-
-### File Limits
-- Maximum file size: 500MB
-- Supported formats: All video formats supported by FFmpeg
-- Output format: MP4 (H.264)
-
-## Project Structure
-
+# Analytics
+ENABLE_ANALYTICS=true
+ANALYTICS_RETENTION_DAYS=90
 ```
-streamhub-video-platform/
+
+## 🎮 Usage Guide
+
+### 👤 User Management
+1. **Registration**: Create new user accounts
+2. **Authentication**: Secure login with JWT tokens
+3. **Profile Management**: Update user preferences
+4. **Session Management**: Persistent login sessions
+
+### 📤 Media Upload
+1. **File Selection**: Drag & drop or browse files
+2. **Metadata Entry**: Title, category, description, tags
+3. **Processing**: Automatic transcoding and optimization
+4. **Organization**: Automatic categorization and indexing
+
+### 🎥 Media Playback
+1. **Browse Library**: Grid or list view with filters
+2. **Search Function**: Real-time search across metadata
+3. **Video Player**: HTML5 player with full controls
+4. **Progress Tracking**: Resume from last position
+
+### 📈 Analytics Dashboard
+1. **Usage Statistics**: Play counts, watch time
+2. **Popular Content**: Trending media identification
+3. **Storage Metrics**: Space usage and optimization
+4. **User Engagement**: Personalized insights
+
+## 🔧 API Documentation
+
+### Authentication Endpoints
+```javascript
+POST /api/auth/register    // User registration
+POST /api/auth/login       // User login
+GET  /api/auth/profile     // Get user profile
+POST /api/auth/logout      // User logout
+```
+
+### Media Management Endpoints
+```javascript
+GET    /api/media           // List all media
+GET    /api/media/:id       // Get specific media
+POST   /api/upload          // Upload new media
+DELETE /api/media/:id       // Delete media
+GET    /api/search          // Search media
+```
+
+### Analytics Endpoints
+```javascript
+GET /api/analytics/stats        // System statistics
+GET /api/analytics/popular      // Popular content
+GET /api/user/engagement        // User engagement metrics
+POST /api/analytics/track       // Track events
+```
+
+## 🏗️ Architecture Details
+
+### Layer Separation
+- **Presentation Layer**: React-like vanilla JS frontend
+- **API Layer**: Express.js REST API with JWT authentication
+- **Business Logic**: Service classes for media, analytics, auth
+- **Data Layer**: SQLite with proper schema design
+- **Infrastructure**: File system, WebSocket, security middleware
+
+### Security Implementation
+- **Authentication**: JWT tokens with secure headers
+- **Authorization**: Role-based access control
+- **Input Validation**: Express-validator middleware
+- **Rate Limiting**: Configurable request throttling
+- **File Security**: Type validation and size limits
+
+### Performance Optimization
+- **Async Processing**: Non-blocking video transcoding
+- **Caching Strategy**: Static file serving optimization
+- **Database Indexing**: Optimized query performance
+- **Memory Management**: Efficient file handling
+
+## 🧪 Testing
+
+```bash
+# Run test suite
+npm test
+
+# Run with coverage
+npm run test:coverage
+
+# Run specific test file
+npm test -- services/MediaService.test.js
+```
+
+## 📦 Deployment
+
+### Docker Deployment
+```dockerfile
+# Build image
+docker build -t streamhub .
+
+# Run container
+docker run -p 3000:3000 -v $(pwd)/storage:/app/storage streamhub
+```
+
+### Production Setup
+```bash
+# Set production environment
+export NODE_ENV=production
+
+# Build optimized assets
+npm run build
+
+# Start with PM2
+pm2 start server.js --name streamhub
+```
+
+## 🛠️ Development
+
+### Project Structure
+```
+streamhub-media-platform/
+├── config/
+│   └── database.js           # Database configuration
+├── middleware/
+│   └── auth.js              # Authentication middleware
+├── routes/
+│   └── api.js               # API route definitions
+├── services/
+│   ├── MediaService.js      # Media management logic
+│   └── AnalyticsService.js  # Analytics processing
 ├── public/
-│   ├── index.html      # Main HTML file
-│   ├── style.css       # Styling
-│   └── script.js       # Frontend JavaScript
-├── videos/             # Compressed video files
-├── thumbnails/         # Generated thumbnails
-├── uploads/            # Temporary upload directory
-├── server.js           # Main server file
-├── package.json        # Dependencies
-└── README.md          # This file
+│   ├── index.html           # Frontend application
+│   ├── style.css            # Application styles
+│   └── script.js            # Frontend JavaScript
+├── storage/
+│   ├── media/               # Processed video files
+│   ├── thumbnails/          # Generated thumbnails
+│   └── temp/                # Temporary uploads
+├── database/
+│   └── media.db             # SQLite database
+├── server.js                # Main application server
+└── package.json             # Dependencies and scripts
 ```
 
-## Features in Detail
+### Development Commands
+```bash
+# Start development server
+npm run dev
 
-### Video Compression
-- **Quality Optimization**: Videos are compressed to 720p for optimal streaming
-- **Size Reduction**: Significant file size reduction while maintaining quality
-- **Format Standardization**: All videos converted to MP4 format
-- **Thumbnail Generation**: Automatic thumbnail creation at 10% of video duration
+# Run linting
+npm run lint
 
-### User Experience
-- **Responsive Design**: Works seamlessly across all device sizes
-- **Loading States**: Clear feedback during upload and processing
-- **Error Handling**: User-friendly error messages and validation
-- **Progress Tracking**: Visual feedback for long-running operations
+# Run tests
+npm test
 
-### Performance
-- **Efficient Streaming**: Optimized video delivery
-- **Lazy Loading**: Videos load only when needed
-- **Memory Management**: Automatic cleanup of temporary files
-- **Concurrent Processing**: Multiple uploads can be processed simultaneously
+# Database operations
+npm run init-db
+npm run migrate
+npm run seed
+```
 
-## Contributing
+## 📊 Monitoring
+
+### System Health Checks
+- **Database Connection**: SQLite connectivity
+- **Storage Space**: Available disk space
+- **FFmpeg Status**: Processing capability
+- **WebSocket Health**: Real-time connection status
+
+### Analytics Tracking
+- **User Events**: Login, upload, play, search
+- **System Events**: Errors, performance metrics
+- **Media Events**: View counts, completion rates
+- **Storage Events**: Upload size, processing time
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+1. **FFmpeg Not Found**
+   ```bash
+   # Verify installation
+   ffmpeg -version
+   
+   # Check PATH
+   echo $PATH
+   ```
+
+2. **Database Connection Error**
+   ```bash
+   # Check permissions
+   ls -la database/
+   
+   # Recreate database
+   npm run init-db
+   ```
+
+3. **Upload Failures**
+   ```bash
+   # Check storage permissions
+   ls -la storage/
+   
+   # Verify file size limits
+   du -h storage/temp/
+   ```
+
+4. **Authentication Issues**
+   ```bash
+   # Check JWT secret
+   echo $JWT_SECRET
+   
+   # Clear browser storage
+   localStorage.clear()
+   ```
+
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+2. Create feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open Pull Request
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## 🙏 Acknowledgments
 
-If you encounter any issues:
-1. Check that FFmpeg is properly installed
-2. Ensure all dependencies are installed
-3. Verify file permissions for upload directories
-4. Check server logs for detailed error messages
+- **FFmpeg**: Video processing engine
+- **Express.js**: Web application framework
+- **SQLite**: Lightweight database engine
+- **WebSocket**: Real-time communication
+- **JWT**: Secure authentication standard
 
-## Troubleshooting
+## 📞 Support
 
-### FFmpeg Not Found
-- Verify FFmpeg is installed and in PATH
-- Test: `ffmpeg -version` in terminal
+For support and questions:
+- Create an issue on GitHub
+- Check the troubleshooting guide
+- Review the API documentation
+- Join our community discussions
 
-### Upload Fails
-- Check file size limits (500MB default)
-- Verify upload directory permissions
-- Ensure sufficient disk space
+---
 
-### Videos Don't Play
-- Check video file exists in `/videos` directory
-- Verify browser video format support
-- Check console for JavaScript errors
-
-## Future Enhancements
-
-- [ ] User authentication system
-- [ ] Video sharing capabilities
-- [ ] Playlist management
-- [ ] Advanced search filters
-- [ ] Video analytics dashboard
-- [ ] Mobile app development
-- [ ] Cloud storage integration
-- [ ] Live streaming support
+**StreamHub** - Professional Personal Media Streaming Platform
+Built with ❤️ for media enthusiasts and professionals.
